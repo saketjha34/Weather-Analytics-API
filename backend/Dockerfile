@@ -20,6 +20,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy the rest of your application code
 COPY . .
 
+ENV PORT=8000
+
 # Expose FastAPI's default port
 EXPOSE 8000
 
