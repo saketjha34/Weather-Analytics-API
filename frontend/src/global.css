@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  background: radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.9), transparent 45%),
+    radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.08), transparent 40%),
+    linear-gradient(160deg, #f8fafc 0%, #f1f5f9 50%, #f8fafc 100%);
+  min-height: 100vh;
+  color: #0f172a;
+}
+
+.dark body {
+  background: radial-gradient(circle at 20% 10%, rgba(59, 130, 246, 0.18), transparent 45%),
+    radial-gradient(circle at 80% 20%, rgba(20, 184, 166, 0.18), transparent 40%),
+    linear-gradient(160deg, #0b1020 0%, #111c36 50%, #0b1020 100%);
+  color: #e2e8f0;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.rdp {
+  --rdp-accent-color: #0f172a;
+  --rdp-background-color: rgba(15, 23, 42, 0.08);
+  --rdp-outline: 2px solid rgba(15, 23, 42, 0.2);
+  --rdp-outline-selected: 2px solid rgba(15, 23, 42, 0.35);
+  color: #0f172a;
+}
+
+.dark .rdp {
+  --rdp-accent-color: #e2e8f0;
+  --rdp-background-color: rgba(255, 255, 255, 0.12);
+  --rdp-outline: 2px solid rgba(255, 255, 255, 0.2);
+  --rdp-outline-selected: 2px solid rgba(255, 255, 255, 0.35);
+  color: #e2e8f0;
+}
