@@ -1,141 +1,314 @@
-# 🌧️ Rainfall Forecast API
+# Weather Analytics Backend API
 
-A FastAPI-based service to forecast rainfall using a trained XGBoost model.
+A production-ready **FastAPI-based backend** for:
 
+*  Rainfall Forecasting (ML-based)
+*  Current Weather + AQI
+*  Weather Forecast Analytics
 
-## 🚀 Features
-
-* 📊 ML-based rainfall prediction (XGBoost)
-* ⚡ FastAPI backend
-* 🐳 Dockerized deployment
-* 🔁 Time-series forecasting (supports future dates)
-* 📦 Clean modular architecture
+Built with a scalable architecture, async APIs, and Docker deployment support.
 
 
-## Setup (Local)
+# Tech Stack
 
-### 1. Create virtual environment
+| Category          | Technology              |
+| ----------------- | ----------------------- |
+| Backend Framework | FastAPI                 |
+| Language          | Python 3.11             |
+| Async HTTP Client | httpx                   |
+| Data Validation   | Pydantic                |
+| ML Models         | Scikit-learn / CatBoost |
+| API Docs          | Swagger (OpenAPI)       |
+| Deployment        | Docker + Railway        |
+| Testing           | Pytest                  |
+
+
+# Project Structure
+
+```
+backend/
+│
+├── app/
+│   ├── api/                # External API clients
+│   ├── core/               # Config & environment
+│   ├── routes/             # FastAPI route handlers
+│   ├── schema/             # Pydantic models
+│   ├── src/                # Pipelines (business logic)
+│   ├── tests/              # Unit tests
+│   └── main.py             # Entry point
+│
+├── requirements.txt
+├── Dockerfile
+└── README.md
+```
+
+
+# 🌐 API Overview
+
+## 🔹 Base URL
+
+```
+https://weather-analytics-api-production.up.railway.app/
+```
+
+
+# 📡 Available APIs
+
+## 1 Current Weather API
+
+### Endpoint
+
+```
+POST /weather/current
+```
+
+### Description
+
+Fetch current weather including AQI for a given location.
+
+### Request Body
+
+| Field    | Type   | Description |
+| -------- | ------ | ----------- |
+| location | string | City name   |
+
+### Example
+
+```json
+{
+  "location": "Bangalore"
+}
+```
+
+
+### Response
+
+| Field         | Type   | Description       |
+| ------------- | ------ | ----------------- |
+| location      | string | City name         |
+| temperature_c | float  | Temperature       |
+| humidity      | int    | Humidity %        |
+| wind_kph      | float  | Wind speed        |
+| condition     | string | Weather condition |
+| precip_mm     | float  | Rainfall          |
+| is_raining    | bool   | Rain flag         |
+| aqi           | object | Air quality data  |
+
+
+## 2 Weather Forecast API
+
+### Endpoint
+
+```
+POST /forecast/weather
+```
+
+### Description
+
+Get weather forecast for N days.
+
+### Request Body
+
+| Field    | Type   | Constraints   |
+| -------- | ------ | ------------- |
+| location | string | Required      |
+| num_days | int    | 1 ≤ value ≤ 7 |
+
+
+### Response
+
+| Field    | Type   | Description    |
+| -------- | ------ | -------------- |
+| location | string | City           |
+| lat      | float  | Latitude       |
+| lon      | float  | Longitude      |
+| forecast | list   | Daily forecast |
+
+
+### Forecast Object
+
+| Field            | Type   | Description     |
+| ---------------- | ------ | --------------- |
+| date             | string | YYYY-MM-DD      |
+| avg_temp_c       | float  | Avg temperature |
+| max_temp_c       | float  | Max temperature |
+| min_temp_c       | float  | Min temperature |
+| total_precip_mm  | float  | Rainfall        |
+| rain_probability | int    | 0–100           |
+| will_rain        | bool   | Rain flag       |
+| max_wind_kph     | float  | Wind speed      |
+| condition        | string | Weather         |
+
+
+## 3️ Rainfall Forecast (ML)
+
+### Endpoint
+
+```
+POST /forecast/rainfall
+```
+
+### Description
+
+Predict rainfall using ML model.
+
+### Request Body
+
+| Field        | Type   | Description     |
+| ------------ | ------ | --------------- |
+| station_name | string | Weather station |
+| start_date   | date   | Start date      |
+| num_days     | int    | Number of days  |
+
+
+### Response
+
+| Field        | Type   | Description          |
+| ------------ | ------ | -------------------- |
+| station_name | string | Station              |
+| start_date   | string | Date                 |
+| num_days     | int    | Days                 |
+| predictions  | list   | Rainfall predictions |
+
+
+#  Data Validation
+
+* All inputs validated using **Pydantic**
+* Strict type enforcement
+* Range constraints (e.g., `num_days ≤ 7`)
+* Automatic request validation errors (422)
+
+# Running Locally (pip + venv)
+
+## 1 Navigate to backend
+
+```bash
+cd backend
+```
+
+
+## 2 Create virtual environment
 
 ```bash
 python -m venv .venv
 ```
 
-Activate:
+## 3 Activate environment
+
+### Windows:
 
 ```bash
-# Windows
 .venv\Scripts\activate
+```
 
-# Linux/Mac
+### Mac/Linux:
+
+```bash
 source .venv/bin/activate
 ```
 
 
-### 2. Install dependencies
+## 4 Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
 
-### 3. Run FastAPI
+## 5 Run server
 
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+uvicorn app.main:app --reload
 ```
 
 
-### 4. Open API Docs
+## 6 Open API Docs
 
 ```
 http://localhost:8000/docs
 ```
 
----
+# Running with Docker
 
-## 🐳 Run with Docker
+## 1️ Navigate
 
+```bash
+cd backend
+```
+
+
+## 2️ Build image
 
 ```bash
 docker compose up --build
 ```
 
+
+## 3 Down and remove containers
+
 ```bash
 docker compose down
 ```
-
-## 🌐 API Endpoints
-
-### ✅ Health Check
-
-```http
-GET /
+To also remove volumes (e.g., for a clean slate):
+```bash
+docker compose down -v
 ```
 
-Response:
+## 4 Open
 
-```json
-{
-  "status": "API is running"
-}
+```
+http://localhost:8000/docs
 ```
 
----
 
-### 🌧️ Forecast Rainfall
+#  Running Tests
 
-```http
-POST /forecast/rainfall
-```
-
-#### Request Body
-
-```json
-{
-  "station_name": "Belgaum",
-  "start_date": "2026-05-01",
-  "num_days": 5
-}
-```
-
----
-
-#### Response
-
-```json
-{
-  "station_name": "Belgaum",
-  "start_date": "2026-05-01",
-  "num_days": 5,
-  "predictions": [
-    {
-      "date_of_record": "2026-05-01",
-      "predicted_rainfall": 2.34
-    }
-  ]
-}
-```
-
----
-
-## 🧪 Running Tests
+## Navigate to tests
 
 ```bash
-pytest
+cd app/test
 ```
 
----
-
-## ⚠️ Notes
-
-* Ensure model file exists:
+## Run tests
 
 ```bash
-app/models/xgb_rainfall_model.pkl
+pytest -v
 ```
 
-* Dataset path:
+or 
 
+## Run using docker
 ```bash
-app/data/processed_weather_data.csv
+docker compose run tests
 ```
+
+## What is tested
+
+* Weather API client
+* Forecast pipelines
+* Pydantic schema validation
+* Error handling
+
+
+# Environment Variables
+
+Create `.env` file inside `backend/`:
+
+```env
+WEATHER_API_KEY=your_api_key_here
+```
+
+
+# 🔐 CORS Configuration
+
+Configured to allow frontend access:
+
+```python
+allow_origins=["*"]
+```
+
+
+# 🚀 Deployment
+
+* Backend: Railway (Docker)
+* Frontend: Vercel

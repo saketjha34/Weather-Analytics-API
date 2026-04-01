@@ -20,11 +20,20 @@ app.add_middleware(
 
 
 @app.get("/")
-def health_check():
+def root():
     """
-    Health check endpoint to verify that the API is running.
+    Root endpoint to verify that the API is running.
     """
     return {"status": "API is running"}
+
+
+@app.get("/health")
+def health():
+    """
+    Health check endpoint to verify that the API is healthy.
+    """
+    return {"status": "ok"}
+
 
 
 app.include_router(rainfall_forecast_router)

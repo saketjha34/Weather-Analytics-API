@@ -8,3 +8,13 @@ services:
       - .:/app
     environment:
       - PYTHONUNBUFFERED=1
+
+  tests:
+    build: .
+    container_name: weather_api_tests
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: >
+      sh -c "pytest app/test -v"
