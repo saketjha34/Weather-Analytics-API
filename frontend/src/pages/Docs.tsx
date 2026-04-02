@@ -21,7 +21,7 @@ const CopyButton = ({ value }: { value: string }) => {
     <button
       type="button"
       onClick={handleCopy}
-      className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-100"
+      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
     >
       {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
       {copied ? "Copied" : "Copy"}
@@ -45,7 +45,8 @@ const CodeBlock = ({ language, value }: { language?: string; value: string }) =>
           style: {
             fontSize: "0.75rem",
             lineHeight: "1.6",
-            fontFamily: '"JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+            fontFamily:
+              '"JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
           },
         }}
       >
@@ -56,30 +57,43 @@ const CodeBlock = ({ language, value }: { language?: string; value: string }) =>
 };
 
 const Docs = () => {
+  const baseUrl = "https://weather-analytics-api-production.up.railway.app";
+
   return (
     <section className="space-y-6">
       <Card className="space-y-3">
         <h2 className="text-2xl font-semibold text-slate-900">API Docs</h2>
         <p className="text-sm text-slate-500">
-          Base URL: <span className="font-semibold">http://localhost:8000</span>
+          Base URL: <span className="font-semibold">{baseUrl}</span>
         </p>
         <p className="text-sm text-slate-500">
-          All requests are JSON and use POST. Replace the base URL with your
-          deployed server when needed.
+          All requests are JSON and use POST. Add the endpoint path to the base
+          URL shown above.
+        </p>
+        <p className="text-sm text-slate-500">
+          Routes: /weather/current/ (current conditions), /forecast/weather/
+          (multi-day forecast), /forecast/rainfall/ (ML rainfall forecast). The
+          rainfall route expects a valid station name and an ISO date
+          (YYYY-MM-DD).
         </p>
       </Card>
 
       <Card className="space-y-4">
         <h3 className="text-lg font-semibold text-slate-900">1) Current Weather</h3>
-        <p className="text-sm text-slate-500">Endpoint: /weather/current/</p>
+        <p className="text-sm text-slate-500">
+          Endpoint: {baseUrl}/weather/current/
+        </p>
         <div>
           <div className="flex items-center justify-between gap-2">
             <p className="text-sm font-semibold text-slate-700">Request Body</p>
             <CopyButton value={`{\n  "location": "Bangalore"\n}`} />
           </div>
-          <CodeBlock language="json" value={`{
+          <CodeBlock
+            language="json"
+            value={`{
   "location": "Bangalore"
-}`} />
+}`}
+          />
         </div>
         <div>
           <div className="flex items-center justify-between gap-2">
@@ -117,13 +131,14 @@ const Docs = () => {
           <div>
             <div className="flex items-center justify-between gap-2">
               <p className="text-sm font-semibold text-slate-700">Curl</p>
-              <CopyButton
-                value={`curl -X POST http://localhost:8000/weather/current/ \\\n  -H "Content-Type: application/json" \\\n  -d '{"location":"Bangalore"}'`}
+                <CopyButton
+                  value={`curl -X POST ${baseUrl}/weather/current/ \\\n  -H "Content-Type: application/json" \\
+  -d '{"location":"Bangalore"}'`}
               />
             </div>
             <CodeBlock
               language="bash"
-              value={`curl -X POST http://localhost:8000/weather/current/ \\
+              value={`curl -X POST ${baseUrl}/weather/current/ \\
   -H "Content-Type: application/json" \\
   -d '{"location":"Bangalore"}'`}
             />
@@ -132,30 +147,30 @@ const Docs = () => {
             <div className="flex items-center justify-between gap-2">
               <p className="text-sm font-semibold text-slate-700">Python</p>
               <CopyButton
-                value={`import requests\n\nresp = requests.post(\n    "http://localhost:8000/weather/current/",\n    json={"location": "Bangalore"},\n)\nprint(resp.json())`}
+                value={`import requests\n\nresp = requests.post(\n    "${baseUrl}/weather/current/",\n    json={"location": "Bangalore"},\n)\nprint(resp.json())`}
               />
             </div>
             <CodeBlock
               language="python"
               value={`import requests
 
-      resp = requests.post(
-        "http://localhost:8000/weather/current/",
-        json={"location": "Bangalore"},
-      )
-      print(resp.json())`}
+resp = requests.post(
+  "${baseUrl}/weather/current/",
+  json={"location": "Bangalore"},
+)
+print(resp.json())`}
             />
           </div>
           <div>
             <div className="flex items-center justify-between gap-2">
               <p className="text-sm font-semibold text-slate-700">JavaScript</p>
               <CopyButton
-                value={`const resp = await fetch("http://localhost:8000/weather/current/", {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify({ location: "Bangalore" }),\n});\nconsole.log(await resp.json());`}
+                value={`const resp = await fetch("${baseUrl}/weather/current/", {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify({ location: "Bangalore" }),\n});\nconsole.log(await resp.json());`}
               />
             </div>
             <CodeBlock
               language="javascript"
-              value={`const resp = await fetch("http://localhost:8000/weather/current/", {
+              value={`const resp = await fetch("${baseUrl}/weather/current/", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ location: "Bangalore" }),
@@ -168,16 +183,21 @@ console.log(await resp.json());`}
 
       <Card className="space-y-4">
         <h3 className="text-lg font-semibold text-slate-900">2) Weather Forecast</h3>
-        <p className="text-sm text-slate-500">Endpoint: /forecast/weather/</p>
+        <p className="text-sm text-slate-500">
+          Endpoint: {baseUrl}/forecast/weather/
+        </p>
         <div>
           <div className="flex items-center justify-between gap-2">
             <p className="text-sm font-semibold text-slate-700">Request Body</p>
             <CopyButton value={`{\n  "location": "Delhi",\n  "num_days": 5\n}`} />
           </div>
-          <CodeBlock language="json" value={`{
+          <CodeBlock
+            language="json"
+            value={`{
   "location": "Delhi",
   "num_days": 5
-}`} />
+}`}
+          />
         </div>
         <div>
           <div className="flex items-center justify-between gap-2">
@@ -212,13 +232,14 @@ console.log(await resp.json());`}
           <div>
             <div className="flex items-center justify-between gap-2">
               <p className="text-sm font-semibold text-slate-700">Curl</p>
-              <CopyButton
-                value={`curl -X POST http://localhost:8000/forecast/weather/ \\\n  -H "Content-Type: application/json" \\\n  -d '{"location":"Delhi","num_days":5}'`}
+                <CopyButton
+                  value={`curl -X POST ${baseUrl}/forecast/weather/ \\\n  -H "Content-Type: application/json" \\
+  -d '{"location":"Delhi","num_days":5}'`}
               />
             </div>
             <CodeBlock
               language="bash"
-              value={`curl -X POST http://localhost:8000/forecast/weather/ \\
+              value={`curl -X POST ${baseUrl}/forecast/weather/ \\
   -H "Content-Type: application/json" \\
   -d '{"location":"Delhi","num_days":5}'`}
             />
@@ -227,30 +248,30 @@ console.log(await resp.json());`}
             <div className="flex items-center justify-between gap-2">
               <p className="text-sm font-semibold text-slate-700">Python</p>
               <CopyButton
-                value={`import requests\n\nresp = requests.post(\n    "http://localhost:8000/forecast/weather/",\n    json={"location": "Delhi", "num_days": 5},\n)\nprint(resp.json())`}
+                value={`import requests\n\nresp = requests.post(\n    "${baseUrl}/forecast/weather/",\n    json={"location": "Delhi", "num_days": 5},\n)\nprint(resp.json())`}
               />
             </div>
             <CodeBlock
               language="python"
               value={`import requests
 
-      resp = requests.post(
-        "http://localhost:8000/forecast/weather/",
-        json={"location": "Delhi", "num_days": 5},
-      )
-      print(resp.json())`}
+resp = requests.post(
+  "${baseUrl}/forecast/weather/",
+  json={"location": "Delhi", "num_days": 5},
+)
+print(resp.json())`}
             />
           </div>
           <div>
             <div className="flex items-center justify-between gap-2">
               <p className="text-sm font-semibold text-slate-700">JavaScript</p>
               <CopyButton
-                value={`const resp = await fetch("http://localhost:8000/forecast/weather/", {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify({ location: "Delhi", num_days: 5 }),\n});\nconsole.log(await resp.json());`}
+                value={`const resp = await fetch("${baseUrl}/forecast/weather/", {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify({ location: "Delhi", num_days: 5 }),\n});\nconsole.log(await resp.json());`}
               />
             </div>
             <CodeBlock
               language="javascript"
-              value={`const resp = await fetch("http://localhost:8000/forecast/weather/", {
+              value={`const resp = await fetch("${baseUrl}/forecast/weather/", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ location: "Delhi", num_days: 5 }),
@@ -263,7 +284,9 @@ console.log(await resp.json());`}
 
       <Card className="space-y-4">
         <h3 className="text-lg font-semibold text-slate-900">3) ML Rainfall Forecast</h3>
-        <p className="text-sm text-slate-500">Endpoint: /forecast/rainfall/</p>
+        <p className="text-sm text-slate-500">
+          Endpoint: {baseUrl}/forecast/rainfall/
+        </p>
         <div>
           <div className="flex items-center justify-between gap-2">
             <p className="text-sm font-semibold text-slate-700">Request Body</p>
@@ -306,13 +329,14 @@ console.log(await resp.json());`}
           <div>
             <div className="flex items-center justify-between gap-2">
               <p className="text-sm font-semibold text-slate-700">Curl</p>
-              <CopyButton
-                value={`curl -X POST http://localhost:8000/forecast/rainfall/ \\\n  -H "Content-Type: application/json" \\\n  -d '{"station_name":"Agumbe","start_date":"2026-03-31","num_days":5}'`}
+                <CopyButton
+                  value={`curl -X POST ${baseUrl}/forecast/rainfall/ \\\n  -H "Content-Type: application/json" \\
+  -d '{"station_name":"Agumbe","start_date":"2026-03-31","num_days":5}'`}
               />
             </div>
             <CodeBlock
               language="bash"
-              value={`curl -X POST http://localhost:8000/forecast/rainfall/ \\
+              value={`curl -X POST ${baseUrl}/forecast/rainfall/ \\
   -H "Content-Type: application/json" \\
   -d '{"station_name":"Agumbe","start_date":"2026-03-31","num_days":5}'`}
             />
@@ -321,34 +345,34 @@ console.log(await resp.json());`}
             <div className="flex items-center justify-between gap-2">
               <p className="text-sm font-semibold text-slate-700">Python</p>
               <CopyButton
-                value={`import requests\n\nresp = requests.post(\n    "http://localhost:8000/forecast/rainfall/",\n    json={\n        "station_name": "Agumbe",\n        "start_date": "2026-03-31",\n        "num_days": 5,\n    },\n)\nprint(resp.json())`}
+                value={`import requests\n\nresp = requests.post(\n    "${baseUrl}/forecast/rainfall/",\n    json={\n        "station_name": "Agumbe",\n        "start_date": "2026-03-31",\n        "num_days": 5,\n    },\n)\nprint(resp.json())`}
               />
             </div>
             <CodeBlock
               language="python"
               value={`import requests
 
-      resp = requests.post(
-        "http://localhost:8000/forecast/rainfall/",
-        json={
-          "station_name": "Agumbe",
-          "start_date": "2026-03-31",
-          "num_days": 5,
-        },
-      )
-      print(resp.json())`}
+resp = requests.post(
+  "${baseUrl}/forecast/rainfall/",
+  json={
+    "station_name": "Agumbe",
+    "start_date": "2026-03-31",
+    "num_days": 5,
+  },
+)
+print(resp.json())`}
             />
           </div>
           <div>
             <div className="flex items-center justify-between gap-2">
               <p className="text-sm font-semibold text-slate-700">JavaScript</p>
               <CopyButton
-                value={`const resp = await fetch("http://localhost:8000/forecast/rainfall/", {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify({\n    station_name: "Agumbe",\n    start_date: "2026-03-31",\n    num_days: 5,\n  }),\n});\nconsole.log(await resp.json());`}
+                value={`const resp = await fetch("${baseUrl}/forecast/rainfall/", {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify({\n    station_name: "Agumbe",\n    start_date: "2026-03-31",\n    num_days: 5,\n  }),\n});\nconsole.log(await resp.json());`}
               />
             </div>
             <CodeBlock
               language="javascript"
-              value={`const resp = await fetch("http://localhost:8000/forecast/rainfall/", {
+              value={`const resp = await fetch("${baseUrl}/forecast/rainfall/", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({

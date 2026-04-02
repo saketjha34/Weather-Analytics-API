@@ -255,10 +255,10 @@ const CurrentWeather = () => {
     <section className="space-y-6">
       <Card className="space-y-4">
         <div>
-          <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
+          <h2 className="text-2xl font-semibold text-slate-900">
             Current Weather
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-300">
+          <p className="text-sm text-slate-500">
             Choose a location to fetch the latest weather, air quality, and
             atmospheric insights.
           </p>
@@ -290,12 +290,12 @@ const CurrentWeather = () => {
           <Button variant="ghost" onClick={handleReset} disabled={loading}>
             Reset
           </Button>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-slate-500">
             If both fields are filled, the dropdown selection takes priority.
           </p>
         </div>
         {error && (
-          <div className="flex items-center gap-2 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-100">
+          <div className="flex items-center gap-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             <AlertTriangle className="h-4 w-4" /> {error}
           </div>
         )}
@@ -304,7 +304,7 @@ const CurrentWeather = () => {
       {loading && <LoadingSpinner />}
 
       {!loading && !data && !error && (
-        <Card className="text-center text-sm text-slate-500 dark:text-slate-300">
+        <Card className="text-center text-sm text-slate-500">
           No data yet. Search for a location to see live conditions.
         </Card>
       )}
@@ -429,14 +429,14 @@ const CurrentWeather = () => {
               />
               <Card className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="rounded-xl bg-slate-900/10 p-3 dark:bg-white/10">
+                    <div className="rounded-xl bg-slate-100 p-3">
                     <Droplets className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-xs uppercase tracking-wide text-slate-400 dark:text-slate-400">
+                      <p className="text-xs uppercase tracking-wide text-slate-400">
                       Is Raining
                     </p>
-                    <p className="text-lg font-semibold text-slate-900 dark:text-slate-50">
+                      <p className="text-lg font-semibold text-slate-900">
                       {data.is_raining ? "Yes" : "No"}
                     </p>
                   </div>

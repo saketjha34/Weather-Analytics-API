@@ -14,18 +14,17 @@ const Button = ({
   ...props
 }: PropsWithChildren<ButtonProps>) => {
   const styles = {
-    primary: "bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900",
+    primary: "bg-slate-900 text-white hover:bg-slate-800",
     secondary:
-      "bg-slate-100 text-slate-900 hover:bg-slate-200 border border-slate-200 dark:border-white/10 dark:bg-slate-800/80 dark:text-slate-100 dark:hover:bg-slate-700/80",
-    ghost:
-      "bg-transparent text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/10",
+      "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200",
+    ghost: "bg-transparent text-slate-600 hover:bg-slate-100",
   };
 
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/60",
+        "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300",
         "disabled:cursor-not-allowed disabled:opacity-60",
         styles[variant],
         className

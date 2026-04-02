@@ -8,12 +8,9 @@ interface BadgeProps {
 
 const Badge = ({ tone = "neutral", className, children }: PropsWithChildren<BadgeProps>) => {
   const tones = {
-    success:
-      "bg-emerald-500/15 text-emerald-700 border-emerald-300/40 dark:text-emerald-200",
-    warning:
-      "bg-amber-500/15 text-amber-700 border-amber-300/40 dark:text-amber-200",
-    neutral:
-      "bg-slate-400/15 text-slate-600 border-slate-300/40 dark:text-slate-200",
+    success: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    warning: "bg-amber-50 text-amber-700 border-amber-200",
+    neutral: "bg-slate-50 text-slate-600 border-slate-200",
   };
 
   return (

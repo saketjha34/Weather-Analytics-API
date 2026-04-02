@@ -283,10 +283,10 @@ const RainfallForecast = () => {
     <section className="space-y-6">
       <Card className="space-y-4 overflow-visible">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">
+          <h2 className="text-2xl font-semibold text-slate-900">
             ML Rainfall Forecast
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-300">
+          <p className="text-sm text-slate-500">
             Request model-based rainfall predictions by station and date range.
           </p>
         </div>
@@ -303,8 +303,8 @@ const RainfallForecast = () => {
               </option>
             ))}
           </Select>
-          <label className="flex w-full flex-col gap-2 text-sm text-slate-600 dark:text-slate-200">
-            <span className="font-medium text-slate-900 dark:text-slate-100">
+          <label className="flex w-full flex-col gap-2 text-sm text-slate-600">
+            <span className="font-medium text-slate-900">
               Start date
             </span>
             <div ref={startRef} className="relative">
@@ -314,7 +314,7 @@ const RainfallForecast = () => {
                   setStartOpen((prev) => !prev);
                   setEndOpen(false);
                 }}
-                className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white/90 px-4 py-2 text-left text-base text-slate-900 shadow-sm transition focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-white/10 dark:bg-white/10 dark:text-slate-100 dark:focus:border-white/40 dark:focus:ring-white/10"
+                className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-2 text-left text-base text-slate-900 shadow-sm transition focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
               >
                 <span>{startDate ? formatDate(startDate) : "Pick start date"}</span>
                 <Calendar className="h-4 w-4 text-slate-400" />
@@ -324,7 +324,7 @@ const RainfallForecast = () => {
                   <div
                     ref={startPopoverRef}
                     style={popoverStyle(startAnchor)}
-                    className="rounded-2xl border border-slate-200 bg-white p-3 shadow-glow dark:border-white/10 dark:bg-slate-900"
+                    className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
                   >
                     <DayPicker
                       mode="single"
@@ -339,8 +339,8 @@ const RainfallForecast = () => {
                 )}
             </div>
           </label>
-          <label className="flex w-full flex-col gap-2 text-sm text-slate-600 dark:text-slate-200">
-            <span className="font-medium text-slate-900 dark:text-slate-100">
+          <label className="flex w-full flex-col gap-2 text-sm text-slate-600">
+            <span className="font-medium text-slate-900">
               End date
             </span>
             <div ref={endRef} className="relative">
@@ -350,7 +350,7 @@ const RainfallForecast = () => {
                   setEndOpen((prev) => !prev);
                   setStartOpen(false);
                 }}
-                className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white/90 px-4 py-2 text-left text-base text-slate-900 shadow-sm transition focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-white/10 dark:bg-white/10 dark:text-slate-100 dark:focus:border-white/40 dark:focus:ring-white/10"
+                className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-2 text-left text-base text-slate-900 shadow-sm transition focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
               >
                 <span>{endDate ? formatDate(endDate) : "Pick end date"}</span>
                 <Calendar className="h-4 w-4 text-slate-400" />
@@ -360,7 +360,7 @@ const RainfallForecast = () => {
                   <div
                     ref={endPopoverRef}
                     style={popoverStyle(endAnchor)}
-                    className="rounded-2xl border border-slate-200 bg-white p-3 shadow-glow dark:border-white/10 dark:bg-slate-900"
+                    className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
                   >
                     <DayPicker
                       mode="single"
@@ -390,10 +390,46 @@ const RainfallForecast = () => {
           )}
         </div>
         {error && (
-          <div className="flex items-center gap-2 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-100">
+          <div className="flex items-center gap-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             <AlertTriangle className="h-4 w-4" /> {error}
           </div>
         )}
+      </Card>
+
+      <Card className="space-y-4">
+        <div>
+          <p className="text-sm font-semibold text-slate-900">Model details</p>
+          <p className="text-sm text-slate-500">
+            Rainfall predictions are generated using an XGBoost regressor trained
+            on historical station observations.
+          </p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Train MAE</p>
+            <p className="mt-1 text-lg font-semibold text-slate-900">4.3523</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Val MAE</p>
+            <p className="mt-1 text-lg font-semibold text-slate-900">3.1666</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Train RMSE</p>
+            <p className="mt-1 text-lg font-semibold text-slate-900">9.8785</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Val RMSE</p>
+            <p className="mt-1 text-lg font-semibold text-slate-900">8.5814</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Train R2</p>
+            <p className="mt-1 text-lg font-semibold text-slate-900">0.5733</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Val R2</p>
+            <p className="mt-1 text-lg font-semibold text-slate-900">0.4716</p>
+          </div>
+        </div>
       </Card>
 
       {loading && <LoadingSpinner />}
