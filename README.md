@@ -32,18 +32,61 @@ Built with modern, scalable technologies using **FastAPI + React (Vite + TypeScr
 # 📂 Project Structure
 
 ```id="projstruct"
-root/
+Weather-Analytics-API/
 │
-├── backend/              # FastAPI backend
-│   ├── app/
-│   ├── Dockerfile
-│   └── requirements.txt
+├── ai/                         # (Optional) ML / experimentation code
 │
-├── frontend/             # React frontend (Vite + TS)
-│   ├── src/
-│   └── package.json
+├── backend/                    # FastAPI backend
+│   │
+│   ├── app/                    # Core application
+│   │   ├── api/                # External API clients (weather APIs)
+│   │   ├── core/               # Config, env loading, constants
+│   │   ├── routes/             # FastAPI route handlers
+│   │   ├── schema/             # Pydantic models (validation)
+│   │   ├── src/                # Business logic / pipelines
+│   │   ├── tests/              # Unit tests (pytest)
+│   │   └── main.py             # FastAPI entry point
+│   │
+│   ├── probers/                # Experimental / debugging scripts
+│   ├── .env                    # Backend environment variables
+│   ├── .env.sample             # Example env file
+│   ├── Dockerfile              # Docker configuration
+│   ├── docker-compose.yaml     # Local multi-service setup
+│   ├── railway.json            # Railway deployment config
+│   ├── requirements.txt        # Python dependencies
+│   ├── README.md               # Backend-specific docs
+│   │
+│   ├── .venv/                  # Virtual environment (ignored)
+│   └── .pytest_cache/          # Pytest cache
 │
-└── README.md
+├── frontend/                   # React frontend (Vite + TypeScript)
+│   │
+│   ├── public/                 # Static assets
+│   │   └── location.txt        # City/location dataset
+│   │
+│   ├── src/                    # Frontend source code
+│   │   ├── components/         # Reusable UI components
+│   │   ├── pages/              # Pages (Weather, Forecast, Rainfall)
+│   │   ├── utils/              # Helpers / API client
+│   │   └── main.tsx            # React entry point
+│   │
+│   ├── .env                    # Frontend env vars (VITE_*)
+│   ├── .env.sample             # Example env
+│   ├── index.html              # Root HTML
+│   ├── package.json            # Dependencies
+│   ├── package-lock.json
+│   ├── vite.config.ts          # Vite config
+│   ├── tsconfig.json           # TypeScript config
+│   ├── tsconfig.node.json
+│   ├── tailwind.config.cjs     # TailwindCSS config
+│   ├── postcss.config.cjs
+│   │
+│   └── node_modules/           # Installed packages (ignored)
+│
+├── .gitignore
+├── .gitattributes
+├── LICENSE
+└── README.md                   # Root project documentation
 ```
 
 
@@ -130,69 +173,106 @@ POST /forecast/rainfall
 
 # 🧪 Backend Setup (Local)
 
-## 1️⃣ Navigate
+## 1 Navigate to backend
 
-```bash id="b1"
+```bash
 cd backend
 ```
 
 
-## 2️⃣ Create virtual environment
+## 2 Create virtual environment
 
-```bash id="b2"
+```bash
 python -m venv .venv
 ```
 
-### Activate
+## 3 Activate environment
 
-**Windows**
+### Windows:
 
-```bash id="b3"
+```bash
 .venv\Scripts\activate
 ```
 
-**Mac/Linux**
+### Mac/Linux:
 
-```bash id="b4"
+```bash
 source .venv/bin/activate
 ```
 
 
-## 3️⃣ Install dependencies
+## 4 Install dependencies
 
-```bash id="b5"
+```bash
 pip install -r requirements.txt
 ```
 
 
-## 4️⃣ Run server
+## 5 Run server
 
-```bash id="b6"
+```bash
 uvicorn app.main:app --reload
 ```
 
 
-## 5️⃣ Open API Docs
+## 6 Open API Docs
 
-```id="b7"
+```
+http://localhost:8000/docs
+```
+
+# Running with Docker
+
+## 1️ Navigate
+
+```bash
+cd backend
+```
+
+
+## 2️ Build image
+
+```bash
+docker compose up --build
+```
+
+
+## 3 Down and remove containers
+
+```bash
+docker compose down
+```
+To also remove volumes (e.g., for a clean slate):
+```bash
+docker compose down -v
+```
+
+## 4 Open
+
+```
 http://localhost:8000/docs
 ```
 
 
-# 🐳 Backend via Docker
+#  Running Tests
 
-```bash id="d1"
-cd backend
-docker build -t weather-api .
-docker run -p 8000:8000 weather-api
+## Navigate to tests
+
+```bash
+cd app/test
 ```
 
+## Run tests
 
-# 🧪 Run Tests
-
-```bash id="t1"
-cd backend/app/tests
+```bash
 pytest -v
+```
+
+or 
+
+## Run using docker
+```bash
+docker compose run tests
 ```
 
 
